@@ -37,8 +37,8 @@ public class CustomAdapter extends ArrayAdapter {
 
         // Obtain the UI components and do the necessary binding
         TextView tvName = rowView.findViewById(R.id.textViewName);
-        TextView tvKm = rowView.findViewById(R.id.textViewYear);
-        TextView tvDesc = rowView.findViewById(R.id.textViewSinger);
+        TextView tvKm = rowView.findViewById(R.id.textViewKm);
+        TextView tvDesc = rowView.findViewById(R.id.textViewDesc);
         ImageView ivImage = rowView.findViewById(R.id.imageView);
         RatingBar rbrating = rowView.findViewById(R.id.ratingBar2);
 

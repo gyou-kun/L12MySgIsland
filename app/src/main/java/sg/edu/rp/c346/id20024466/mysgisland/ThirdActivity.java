@@ -1,7 +1,9 @@
 package sg.edu.rp.c346.id20024466.mysgisland;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -57,18 +59,18 @@ public class ThirdActivity extends AppCompatActivity {
                 try {
                     km = Integer.valueOf(etKm.getText().toString().trim());
                 } catch (Exception e){
-                    Toast.makeText(ThirdActivity.this, "Invalid Square km", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ThirdActivity.this, "Invalid square km", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 currentIsland.setKm(km);
 
-                int stars = Integer.valueOf(Math.round(RB.getRating()));
-                currentIsland.setStars(stars);
+                //int selectedRB = rg.getCheckedRadioButtonId();
+                //RadioButton rb = (RadioButton) findViewById(selectedRB);
+                //currentSong.setStars(Integer.parseInt(rb.getText().toString()));
+                currentIsland.setStars((int) RB.getRating());
                 int result = dbh.updateIsland(currentIsland);
                 if (result>0){
                     Toast.makeText(ThirdActivity.this, "Island updated", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent();
-                    setResult(RESULT_OK);
                     finish();
                 } else {
                     Toast.makeText(ThirdActivity.this, "Update failed", Toast.LENGTH_SHORT).show();
@@ -77,28 +79,62 @@ public class ThirdActivity extends AppCompatActivity {
         });
 
 
+
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DBHelper dbh = new DBHelper(ThirdActivity.this);
-                int result = dbh.deleteIsland(currentIsland.getId());
-                if (result>0){
-                    Toast.makeText(ThirdActivity.this, "Island deleted", Toast.LENGTH_SHORT).show();
-                    finish();
-                } else {
-                    Toast.makeText(ThirdActivity.this, "Delete failed", Toast.LENGTH_SHORT).show();
-                }
+                AlertDialog.Builder myBuilder = new AlertDialog.Builder(ThirdActivity.this);
+                myBuilder.setTitle("Danger");
+                myBuilder.setMessage("Are you sure you want to delete the island\n" + currentIsland.getName());
+                myBuilder.setCancelable(false);
+
+                myBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DBHelper dbh = new DBHelper(ThirdActivity.this);
+                        int result = dbh.deleteIsland(currentIsland.getId());
+                        if (result > 0) {
+                            Toast.makeText(ThirdActivity.this, "Island deleted", Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            Toast.makeText(ThirdActivity.this, "Delete failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                myBuilder.setNegativeButton("Cancel", null);
+                AlertDialog myDialog = myBuilder.create();
+                myDialog.show();
             }
         });
+
+
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                AlertDialog.Builder myBuilder = new AlertDialog.Builder(ThirdActivity.this);
+                myBuilder.setTitle("Danger");
+                myBuilder.setMessage("Are you sure you want to discard the changes");
+                myBuilder.setCancelable(false);
+
+                myBuilder.setPositiveButton("Discard", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+
+                myBuilder.setNegativeButton("Do not discard", null);
+                AlertDialog myDialog = myBuilder.create();
+                myDialog.show();
             }
+
+
         });
 
     }
+
 
 
 }

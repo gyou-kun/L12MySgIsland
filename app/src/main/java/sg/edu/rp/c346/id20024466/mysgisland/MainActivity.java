@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 DBHelper dbh = new DBHelper(MainActivity.this);
 
                 int stars = (int) getStars();
-                dbh.insertSong(title, singers, year, stars);
+                dbh.insertIsland(title, singers, year, stars);
                 dbh.close();
                 Toast.makeText(MainActivity.this, "Inserted", Toast.LENGTH_LONG).show();
 
